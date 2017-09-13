@@ -64,7 +64,7 @@ def fetch_cat_and_id(url):
         int(ID)
     except ValueError:
         print("Unexpected URL input. ID retrieved is not an integer")
-    return(ID,cat)
+    return(cat, ID)
 
 #%%
 def get_text(url, rm_digits = True, rm_punct = True):
