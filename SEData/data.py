@@ -67,14 +67,23 @@ def fetch_cat_and_id(url):
     return(ID,cat)
 
 #%%
-def get_text(url):
+def get_text(url, rm_digits = True, rm_punct = True):
     '''Outputs the text of a question from a Stack Exchange URL. Outputs np.NaN in case of error'''
     r = requests.get(url)
     html_doc = r.text
     soup = BeautifulSoup(html_doc, 'lxml')
+    
+    digit_list = "1234567890"
+    punct_list = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
     try:
-        text =soup.find(attrs={'class':'post-text'}).get_text()
-        return(text.replace('\n',''))
+        text = soup.find(attrs={'class':'post-text'}).get_text()
+        if rm_punct  == True:
+                for char in punct_list:
+                    text = text.replace(char, "")
+        if rm_digits == True:
+                for char in digit_list:
+                    text = text.replace(char, "")
+        return(text.replace('\n',' '))
     except:
         return(np.NaN)
         
@@ -86,3 +95,4 @@ def find_cat(url):
     return(url.split("https://")[1].split(".")[0])
     
     ### Time this to determine if it is fast enough to keep or just redudant given fetch_cat_and_id does the same thing
+
