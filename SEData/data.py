@@ -69,6 +69,7 @@ def fetch_cat_and_id(url):
 #%%
 def get_text(url, rm_digits = True, rm_punct = True):
     '''Outputs the text of a question from a Stack Exchange URL. Outputs np.NaN in case of error'''
+    
     r = requests.get(url)
     html_doc = r.text
     soup = BeautifulSoup(html_doc, 'lxml')
@@ -84,9 +85,9 @@ def get_text(url, rm_digits = True, rm_punct = True):
         if rm_digits == True:
                 for char in digit_list:
                     text = text.replace(char, "")
-        return(text)
+        return(find_cat(url), text)
     except:
-        return(np.NaN)
+        return(np.NaN, np.NaN)
         
     ### Need add functionality to remove numbers.
     
@@ -96,6 +97,16 @@ def find_cat(url):
     return(url.split("https://")[1].split(".")[0])
     
     ### Time this to determine if it is fast enough to keep or just redudant given fetch_cat_and_id does the same thing
+#%%
+def populate_stepback_links(question_links, step_back = 100):
+    new_links = []
+    for link in question_links:
+        cat, ID = fetch_cat_and_id(link)
+        new_ID = int(ID)  - step_back
+        new_links.append(create_stackexchange_url(cat, new_ID))
+    return(new_links)
+    
+    
 #%%
 sample_question_links = ['https://raspberrypi.stackexchange.com/questions/72438/how-to-use-spi-on-raspberry-pi-3',
  'https://worldbuilding.stackexchange.com/questions/91909/why-colonise-planets',
