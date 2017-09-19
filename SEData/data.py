@@ -12,7 +12,8 @@ from bs4 import BeautifulSoup
 import re
 import numpy as np
 import pandas as pd
-
+from time import sleep
+from random import randint
 #%%
 def populate_question_links(url='https://stackexchange.com/questions?pagesize=50'):
     '''Generates a list of URLs pointing to 'hot questions' on the Stack Exchange network. No non-optional arguments.'''
@@ -67,9 +68,10 @@ def fetch_cat_and_id(url):
     return(cat, ID)
 
 #%%
-def get_text(url, rm_digits = True, rm_punct = True):
+def get_text(url, rm_digits = True, rm_punct = True, pause=False, sleep_max=5):
     '''Outputs the text of a question from a Stack Exchange URL. Outputs np.NaN in case of error'''
-    
+    if pause == True:
+        sleep(randint(1, sleep_max))
     r = requests.get(url)
     html_doc = r.text
     soup = BeautifulSoup(html_doc, 'lxml')
@@ -158,3 +160,4 @@ sample_question_links = ['https://raspberrypi.stackexchange.com/questions/72438/
  'https://money.stackexchange.com/questions/84975/why-is-auto-insurance-ridiculously-overpriced-for-those-who-drive-few-miles',
  'https://worldbuilding.stackexchange.com/questions/91888/what-kind-of-food-would-be-common-in-a-culture-that-tries-to-avoid-fire-as-much',
  'https://mathoverflow.net/questions/281043/feit-thompson-conjecture']
+
