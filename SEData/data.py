@@ -40,20 +40,6 @@ def create_stackexchange_url(category, ID):
     '''Concatenates Stack Exchange category and ID to form Stack Exchange URL'''
     return('https://'+category+'.stackexchange.com/questions/'+str(ID))
     
-#%%
-def find_highest_id(cat, starting_id=1, max_iter=1000):
-    '''Finds highest valid Stack Exchange URL given inputed category and a starting ID. 
-        May malfunction in the case of removed questions. Use with caution.'''
-    highest_id = starting_id
-    limit=0
-    while limit < max_iter:
-        try: 
-            get_text(create_stackexchange_url(category=cat, id=highest_id))
-            limit += 1
-            highest_id += 1
-        except AttributeError:
-            return(highest_id-1)
-            break
 
 #%%
 def fetch_cat_and_id(url):
@@ -100,12 +86,13 @@ def find_cat(url):
     
     ### Time this to determine if it is fast enough to keep or just redudant given fetch_cat_and_id does the same thing
 #%%
-def populate_stepback_links(question_links, step_back = 100):
+def back_generate_links(question_links, n = 100):
     new_links = []
     for link in question_links:
         cat, ID = fetch_cat_and_id(link)
-        new_ID = int(ID)  - step_back
-        new_links.append(create_stackexchange_url(cat, new_ID))
+        for i in range(n):
+            new_ID = int(ID)  - i
+            new_links.append(create_stackexchange_url(cat, new_ID))
     return(new_links)
     
     
